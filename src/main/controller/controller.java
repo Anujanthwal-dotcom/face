@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.codec.CodecConfigurer.MultipartCodecs;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -5,16 +9,23 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class controller {
     
-    public service Service;
+    
+
+
+
+
+
     @PostMapping("/upload")
-    public String ImagefromFrontend(@RequestParam("file") MultipartFile multipartFile) {
+    public String[] ImagefromFrontend(@RequestParam("file") MultipartFile multipartFile) {
+
+        
 
         ///loop for checking all the student
        
-            Service.recognition(multipartFile);
+            Service.presentStudents(multipartFile);
             
         
-        return "The attendence will be marked shortly";
+        return presentStudents;
     }
     
 }

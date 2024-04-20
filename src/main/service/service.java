@@ -24,6 +24,10 @@ public class service {
             @Autowired
             private MongoTemplate mongoTemplate;
             
+            //list of students will be fetched
+            public List<student> getAllIds() {
+                return mongoTemplate.findAll(student.class,"faceAppData");
+            }
 
             //converting to xml
             private Document convertStringToXMLDocument(String xmlString) {
@@ -46,62 +50,63 @@ public class service {
     
     
     
-            //list of students will be fetched
-            public List<student> getAllIds() {
-                return mongoTemplate.findAll(student.class,"faceAppData");
-            }
 
 
-        public void recognition(MultipartFile file){
-        //making a list to store the list
-       
-        List<student> list =new ArrayList<student>();
-        
-        //get all students
-       
-        list = getAllIds();
+        public String[] presentStudents(MultipartFile file){
+                    
+                    //making a list to store the list
+                
+                    ArrayList<student> list =new ArrayList<student>();
+                    
+                    //get all students
+                
+                    list = getAllIds();
 
-        ///loop for checking a single student
-        //loop for checking all the student will be in the controller class
-        //how to fetch the xml file from the server
-                        for(student m:list){
-                            
-                                    //converting the string containing xml content to xml
-                                   
-                                    Document data=convertStringToXMLDocument(m.FaceParameters);
-                                   
-                                    //putting in cascade classifier
-                                   
-                                    CascadeClassifier facecascade = new CascadeClassifier(data);
-
-                                    Mat image = Imgcodecs.imread(file);
-
-                                    // Convert the image to grayscale (required for face detection)
-                                   
-                                    Mat gray = new Mat();
-                                    Imgproc.cvtColor(image, gray, Imgproc.COLOR_BGR2GRAY);
-
-                                    // Detect faces using your custom classifier
-                                 
-                                    MatOfRect customFaces = new MatOfRect();
-                                    customFaceCascade.detectMultiScale(gray, customFaces);
-
-                                    
-                                    
-                                    //mark the attendence of that particular student
+                    ///loop for checking a single student
+                    //loop for checking all the student will be in the controller class
+                    //how to fetch the xml file from the server
 
 
-                                    if(customFaces.toArray().length==0){
-                                        //mark the absent
+                                    for(student m:list){
+                                        
+                                                //converting the string containing xml content to xml
+                                            
+                                                Document data=convertStringToXMLDocument(m.FaceParameters);
+                                            
+                                                //putting in cascade classifier
+                                            
+                                                CascadeClassifier facecascade = new CascadeClassifier(data);
+
+                                                Mat image = Imgcodecs.imread(file);
+
+                                                // Convert the image to grayscale (required for face detection)
+                                            
+                                                Mat gray = new Mat();
+                                                Imgproc.cvtColor(image, gray, Imgproc.COLOR_BGR2GRAY);
+
+                                                // Detect faces using your custom classifier
+                                            
+                                                MatOfRect customFaces = new MatOfRect();
+                                                customFaceCascade.detectMultiScale(gray, customFaces);
+
+                                                
+                                                
+                                                //mark the attendence of that particular student
+
+
+                                                if(customFaces.toArray().length==0){
+                                                    continue;
+                                                }
+                                                else{
+                                                    //mark the present
+                                                    Arraylist.add(m.name);
+                                                }
+
                                     }
-                                    else{
-                                        //mark the present
-                                    }
 
-                        }
+                                    return list;
 
-
-    }
+                }
 
 
 }
